@@ -1,31 +1,24 @@
 <?php
 session_start();
 
-// Verificar si la cookie 'userloged' está establecida
 if(isset($_COOKIE['userloged'])) {
     $userloged = $_COOKIE['userloged'];
 } else {
-    // Si la cookie no está establecida, redirigir a la página de inicio de sesión
     header("Location: login.php");
     exit;
 }
 
 require 'vendor/autoload.php';
-use Laminas\Ldap\Ldap; // Importar la clase Ldap
+use Laminas\Ldap\Ldap;
 
-// Verificar si la cookie 'userloged' está establecida y tiene el valor 'admin'
 if(isset($_COOKIE['userloged']) && $_COOKIE['userloged'] === 'admin') {
-    // Si el usuario es un administrador, continuar con el borrado de usuarios
     
-    // Verificar si se ha enviado el formulario
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Verificar si se han enviado los parámetros uid y unitat_organitzativa
         if(isset($_POST['uid']) && isset($_POST['unitat_organitzativa'])) {
-            // Obtener los valores de los parámetros
+            
             $uid = $_POST['uid'];
             $unitat_organitzativa = $_POST['unitat_organitzativa'];
             
-            // Configuración de conexión LDAP
             $domini = 'dc=fjeclot,dc=net';
             $opcions = [
                 'host' => 'zends-orbaam',
@@ -36,31 +29,23 @@ if(isset($_COOKIE['userloged']) && $_COOKIE['userloged'] === 'admin') {
                 'baseDn' => 'dc=fjeclot,dc=net',
             ];
             
-            // Intentar eliminar el usuario de LDAP
             try {
-                // Crear conexión LDAP
-                $ldap = new Ldap($opcions); // Crear una instancia de la clase Ldap
+                $ldap = new Ldap($opcions);
                 $ldap->bind();
                 
-                // Crear el DN del usuario a eliminar
                 $dn = 'uid=' . $uid . ',ou=' . $unitat_organitzativa . ',' . $domini;
                 
-                // Eliminar el usuario del directorio LDAP
                 $ldap->delete($dn);
                 
-                // Mostrar mensaje de éxito
                 echo "<script>alert('Usuari $uid eliminat amb èxit.');</script>";
             } catch (Laminas\Ldap\Exception\LdapException $e) {
-                // Si hay un error al eliminar el usuario, mostrar mensaje de error
                 echo "<script>alert('Error: $e');</script>";
             }
         } else {
-            // Si falta algún parámetro, mostrar un mensaje de error
-            echo "<script>alert('Falta algún parámetro.');</script>";
+            echo "<script>alert('Falta algún paràmetre.');</script>";
         }
     }
 } else {
-    // Si el usuario no es un administrador, redirigir a la página de inicio de sesión
     header("Location: login.php");
     exit;
 }

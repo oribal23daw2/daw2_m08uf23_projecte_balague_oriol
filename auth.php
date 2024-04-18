@@ -19,7 +19,6 @@ if ($_POST['cts'] && $_POST['adm']) {
     try {
         $ldap->bind($dn, $ctsnya);
         
-        // Si la autenticación es exitosa, establece una cookie que expire en 1 hora
         $expiry = time() + 3600; // 1 hora
         setcookie('userloged', $_POST['adm'], $expiry, '/');
         header("location: menu.php");

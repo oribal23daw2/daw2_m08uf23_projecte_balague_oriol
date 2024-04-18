@@ -1,11 +1,9 @@
 <?php
 session_start();
 
-// Verificar si la cookie 'userloged' está establecida
 if(isset($_COOKIE['userloged'])) {
     $userloged = $_COOKIE['userloged'];
 } else {
-    // Si la cookie no está establecida, redirigir a la página de inicio de sesión
     header("Location: login.php");
     exit;
 }
@@ -16,19 +14,13 @@ use Laminas\Ldap\Ldap;
 
 ini_set('display_errors', 0);
 
-// Verificar si se ha enviado el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Verificar si se han enviado los parámetros uid y unitat_organitzativa
     if(isset($_POST['uid']) && isset($_POST['unitat_organitzativa'])) {
-        // Obtener los valores de los parámetros
         $uid = $_POST['uid'];
         $unitat_organitzativa = $_POST['unitat_organitzativa'];
         
-        // Obtener el atributo seleccionado para modificar
         $atributo = $_POST['atributo'];
-        // Verificar si se ha seleccionado un atributo a modificar
         if ($atributo) {
-            // Configuración de conexión LDAP
             $opciones = [
                 'host' => 'zends-orbaam',
                 'username' => 'cn=admin,dc=fjeclot,dc=net',
@@ -38,20 +30,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'baseDn' => 'dc=fjeclot,dc=net',
             ];
             
-            // Crear conexión LDAP
             $ldap = new Ldap($opciones);
             $ldap->bind();
             
-            // Obtener el DN del usuario a modificar
             $dn = 'uid='.$uid.',ou='.$unitat_organitzativa.',dc=fjeclot,dc=net';
             
-            // Obtener la entrada del usuario
             $entrada = $ldap->getEntry($dn);
             if ($entrada) {
-                // Obtener el valor actual del atributo
                 $valor_actual = isset($entrada[$atributo][0]) ? $entrada[$atributo][0] : "";
                 
-                // Modificar el atributo seleccionado
                 if (isset($_POST['nuevo_valor'])) {
                     $nuevo_valor = $_POST['nuevo_valor'];
                     Attribute::setAttribute($entrada, $atributo, $nuevo_valor);

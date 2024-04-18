@@ -1,10 +1,8 @@
 <?php
 
-// Verificar si la cookie 'userloged' está establecida
 if(isset($_COOKIE['userloged'])) {
     $userloged = $_COOKIE['userloged'];
 } else {
-    // Si la cookie no está establecida, redirigir a la página de inicio de sesión
     header("Location: login.php");
     exit;
 }
@@ -12,7 +10,6 @@ if(isset($_COOKIE['userloged'])) {
 require 'vendor/autoload.php';
 use Laminas\Ldap\Ldap;
 
-// Configuración de conexión LDAP
 $domain = 'dc=fjeclot,dc=net';
 $options = [
     'host' => 'zends-orbaam',
@@ -29,7 +26,6 @@ $ldap->bind();
 $error_message = '';
 $user_attributes = [];
 
-// Procesar el formulario cuando se envía
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST['uid']) && isset($_POST['unitat_organitzativa'])) {
         $uid = htmlspecialchars($_POST['uid']);

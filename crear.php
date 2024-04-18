@@ -1,11 +1,9 @@
 <?php
 session_start();
 
-// Verificar si la cookie 'userloged' está establecida
 if(isset($_COOKIE['userloged'])) {
     $userloged = $_COOKIE['userloged'];
 } else {
-    // Si la cookie no está establecida, redirigir a la página de inicio de sesión
     header("Location: login.php");
     exit;
 }
@@ -16,7 +14,6 @@ use Laminas\Ldap\Ldap;
 
 ini_set('display_errors', 0);
 
-// Obtener los valores del formulario si se ha enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $uid = $_POST['uid'];
     $unorg = $_POST['unitat_organitzativa'];
@@ -33,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $titol = $_POST['title'];
     $descripcio = $_POST['description'];
     
-    // Configuración de conexión LDAP
     $domini = 'dc=fjeclot,dc=net';
     $opcions = [
         'host' => 'zends-orbaam',
@@ -44,11 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'baseDn' => 'dc=fjeclot,dc=net',
     ];
     
-    // Conexión LDAP
     $ldap = new Ldap($opcions);
     $ldap->bind();
     
-    // Creación de la nueva entrada en el directorio LDAP
     $nova_entrada = [];
     Attribute::setAttribute($nova_entrada, 'objectClass', ['inetOrgPerson', 'organizationalPerson', 'person', 'posixAccount', 'shadowAccount', 'top']);
     Attribute::setAttribute($nova_entrada, 'uid', $uid);

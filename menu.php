@@ -1,13 +1,10 @@
 <?php
 session_start();
 
-// Verificar si la cookie 'userloged' está establecida
 if(isset($_COOKIE['userloged'])) {
     $userloged = $_COOKIE['userloged'];
     
-    // Verificar si el usuario es un administrador
     if($userloged === 'admin') {
-        // Si el usuario es un administrador, mostrar el menú
  ?>
 <html>
 <head>
